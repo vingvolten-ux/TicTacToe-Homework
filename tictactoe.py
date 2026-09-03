@@ -230,6 +230,13 @@ while True:
 
     pygame.display.update()
 
+    #Restart button
+    if game_over:
+        font = pygame.font.Font(None, 24)
+        restart_text = font.render("Press 'R' to Restart", True, WHITE)
+        screen.blit(restart_text, (WIDTH // 2 - restart_text.get_width() // 2, HEIGHT - 30))
+        pygame.display.update()
+
 
 
  

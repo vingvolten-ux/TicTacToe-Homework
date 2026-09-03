@@ -90,6 +90,33 @@ def check_win(player, check_board=board):
     return False
 
 
+def minimax(board, depth, is_maximizing):
+    if check_win(2, board):
+        return 1
+    elif check_win(1, board):
+        return -1
+    elif is_board_full(board):
+        return 0
 
+    if is_maximizing:
+        best_score = -np.inf
+        for row in range(BOARD_ROWS):
+            for col in range(BOARD_COLS):
+                if board[row][col] == 0:
+                    board[row][col] = 2
+                    score = minimax(board, depth + 1, False)
+                    board[row][col] = 0
+                    best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = np.inf
+        for row in range(BOARD_ROWS):
+            for col in range(BOARD_COLS):
+                if board[row][col] == 0:
+                    board[row][col] = 1
+                    score = minimax(board, depth + 1, True)
+                    board[row][col] = 0
+                    best_score = min(score, best_score)
+        return best_score
 
                 

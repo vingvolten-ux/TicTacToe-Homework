@@ -61,7 +61,7 @@ def is_board_full(check_board=board):
     for row in range(BOARD_ROWS):
         for col in range(BOARD_ROWS):
             if check_board[row][col] == 0:
-                return 
+                return False
     return True
 
 def check_win(player, check_board=board):
@@ -175,15 +175,14 @@ draw_lines()
 player = 1
 game_over = False
 
-
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            pygame.quit()
             sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
-            mouseX = event.pos[0]
-            mouseY = event.pos[1]
 
+        if event.type == pygame.MOUSEBUTTONDOWN and not game_over and player == 1:
+            mouseX, mouseY = event.pos
             clicked_row = int(mouseY // SQUARE_SIZE)
             clicked_col = int(mouseX // SQUARE_SIZE)
 
@@ -191,15 +190,10 @@ while True:
                 mark_square(clicked_row, clicked_col, player)
                 if check_win(player):
                     game_over = True
-                player = 2
-                draw_figures()
-
-        if player == 2 and not game_over:
-            best_move()
-            if check_win(player):
-                game_over = True
-            player = 1
-            draw_figures()
+                elif is_board_full():
+                    game_over = True
+                else:
+                    player = 2
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
@@ -207,24 +201,34 @@ while True:
                 player = 1
                 game_over = False
 
+    # AI move happens once per frame, outside the event loop
+    if player == 2 and not game_over:
+        best_move()
+        if check_win(2):
+            game_over = True
+        elif is_board_full():
+            game_over = True
+        else:
+            player = 1
 
     if not game_over:
+        screen.fill(BLACK)
+        draw_lines()
         draw_figures()
     else:
+        screen.fill(BLACK)
+        draw_lines()
+        draw_figures()
+        font = pygame.font.Font(None, 36)
         if check_win(1):
-            font = pygame.font.Font(None, 36)
             text = font.render("Player 1 wins!", True, GREEN)
-            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
         elif check_win(2):
-            font = pygame.font.Font(None, 36)
             text = font.render("Player 2 wins!", True, RED)
-            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
         else:
-            font = pygame.font.Font(None, 36)
             text = font.render("It's a draw!", True, GRAY)
-            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
+        screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
 
-
+    pygame.display.update()
 
 
 

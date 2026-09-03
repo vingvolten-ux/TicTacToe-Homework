@@ -119,4 +119,25 @@ def minimax(board, depth, is_maximizing):
                     best_score = min(score, best_score)
         return best_score
 
-                
+
+def best_move():
+    best_score = -np.inf
+    move = None
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            if board[row][col] == 0:
+                board[row][col] = 2
+                score = minimax(board, 0, False)
+                board[row][col] = 0
+                if score > best_score:
+                    best_score = score
+                    move = (row, col)
+    if move != (-1, -1):
+                    mark_square(move[0], move[1], 2)
+                    return True
+    return False
+
+
+
+
+ 

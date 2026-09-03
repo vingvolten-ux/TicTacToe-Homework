@@ -59,5 +59,37 @@ def available_square(row,col):
 
 def is_board_full(check_board=board):
     for row in range(BOARD_ROWS):
-        for col in range
+        for col in range(BOARD_ROWS):
+            if check_board[row][col] == 0:
+                return False
+    return True
+
+def check_win(player, check_board=board):
+    #vertical win check
+    for col in range(BOARD_COLS):
+        if check_board[0][col] == player and check_board[1][col] == player and check_board[2][col] == player:
+            draw_vertical_winning_line(col,player)
+            return True
+
+    #horizontal win check
+    for row in range(BOARD_ROWS):
+        if check_board[row][0] == player and check_board[row][1] == player and check_board[row][2] == player:
+            draw_horizontal_winning_line(row,player)
+            return True
+
+    #asc diagonal win check
+    if check_board[2][0] == player and check_board[1][1] == player and check_board[0][2] == player:
+        draw_asc_diagonal(player)
+        return True
+
+    #desc diagonal win check
+    if check_board[0][0] == player and check_board[1][1] == player and check_board[2][2] == player:
+        draw_desc_diagonal(player)
+        return True
+
+    return False
+
+
+
+
                 

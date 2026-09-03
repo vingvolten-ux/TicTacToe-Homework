@@ -139,5 +139,71 @@ def best_move():
 
 
 
+def restart():
+    screen.fill(BLACK)
+    draw_lines()
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            board[row][col] = 0
+
+
+
+draw_lines()
+
+player = 1
+game_over = False
+
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            mouseX = event.pos[0]
+            mouseY = event.pos[1]
+
+            clicked_row = int(mouseY // SQUARE_SIZE)
+            clicked_col = int(mouseX // SQUARE_SIZE)
+
+            if available_square(clicked_row, clicked_col):
+                mark_square(clicked_row, clicked_col, player)
+                if check_win(player):
+                    game_over = True
+                player = 2
+                draw_figures()
+
+        if player == 2 and not game_over:
+            best_move()
+            if check_win(player):
+                game_over = True
+            player = 1
+            draw_figures()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                restart()
+                player = 1
+                game_over = False
+
+
+    if not game_over:
+        draw_figures()
+    else:
+        if check_win(1):
+            font = pygame.font.Font(None, 36)
+            text = font.render("Player 1 wins!", True, GREEN)
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
+        elif check_win(2):
+            font = pygame.font.Font(None, 36)
+            text = font.render("Player 2 wins!", True, RED)
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
+        else:
+            font = pygame.font.Font(None, 36)
+            text = font.render("It's a draw!", True, GRAY)
+            screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - text.get_height() // 2))
+
+
+
+
 
  
